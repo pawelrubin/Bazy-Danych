@@ -1,0 +1,1 @@
+SELECT title FROM film WHERE rating = 'R' ORDER BY length LIMIT 5;
