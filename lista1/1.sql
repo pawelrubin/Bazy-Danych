@@ -1,3 +1,1 @@
-# zadanie 1.
-
-show tables;
+SHOW TABLES;

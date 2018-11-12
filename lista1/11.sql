@@ -6,7 +6,7 @@ FROM (
   JOIN (
     SELECT COUNT(rental_id) AS num_peter
     FROM rental
-    JOIN customer c on rental.customer_id = c.customer_id
+    JOIN customer c ON rental.customer_id = c.customer_id
     WHERE email='PETER.MENARD@sakilacustomer.org'
   ) AS tab1
   GROUP BY r.customer_id
