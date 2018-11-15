@@ -1,2 +1,5 @@
 
 *.xml
+*.meta
+*.zip
+*.iml
