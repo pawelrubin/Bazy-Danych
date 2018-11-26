@@ -17,6 +17,8 @@ CREATE TABLE Kontrakty (
   PRIMARY KEY (ID),
   FOREIGN KEY (aktor) REFERENCES aktorzy(id_aktora),
   FOREIGN KEY (agent) REFERENCES Agenci(licencja),
-  CHECK (DATEDIFF(day, poczatek, koniec) >= 1),
+  CHECK (DATEDIFF(poczatek, koniec) >= 1),
   CHECK (gaza >= 0)
 );
+ALTER TABLE Kontrakty auto_increment=1;
+drop table Kontrakty

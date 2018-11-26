@@ -1,12 +1,12 @@
 CREATE TABLE aktorzy (
-  id_aktora INT NOT NULL AUTO_INCREMENT,
+  id_aktora INT NOT NULL,
   imie VARCHAR(50),
   nazwisko VARCHAR(50),
   PRIMARY KEY (id_aktora)
 );
 
 CREATE TABLE filmy (
-  id_filmu INT NOT NULL AUTO_INCREMENT,
+  id_filmu INT NOT NULL,
   tytul varchar(50),
   czas_trwania INT,
   kategoria_wiekowa VARCHAR(50),
@@ -18,6 +18,7 @@ CREATE TABLE zagrali (
   id_aktora INT,
   PRIMARY KEY (id_filmu, id_aktora)
 );
+
 
 INSERT INTO `laboratorium-filmoteka`.aktorzy (id_aktora, imie, nazwisko)
 SELECT actor_id, first_name, last_name

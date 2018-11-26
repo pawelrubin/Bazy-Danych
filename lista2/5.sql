@@ -28,19 +28,30 @@ CREATE PROCEDURE tworzenie_agentow ()
 DELIMITER ;
 
 DELIMITER //
-INSERT INTO kontra
+
 CREATE PROCEDURE do_kontraktow ()
   BEGIN
     SET @id = 1;
+    SET @lim = (SELECT MAX(id_aktora) FROM aktorzy);
     label: LOOP
-      IF @id > (SELECT COUNT(*) FROM aktorzy) THEN
+      IF @id > @lim THEN
         LEAVE label;
-        INSERT INTO kontrakty (ID, aktor, agent)
-        SELECT (
-          @id,
-
-
-                   )
       END IF;
+      IF (@id IN (SELECT id_aktora FROM aktorzy)) THEN
+        INSERT INTO kontrakty (aktor, agent, koniec, poczatek, gaza) VALUES (
+          @id,
+          (SELECT licencja FROM agenci ORDER BY RAND() LIMIT 1 ),
+          DATE_ADD(CURDATE(), INTERVAL FLOOR(RAND()*365) DAY ),
+          CURDATE(),
+          FLOOR(RAND()*1000 + 1)
+        );
+      END IF;
+      SET @id = @id + 1;
+      ITERATE label;
     END LOOP;
-  END;
+  END//
+delete from kontrakty;
+drop procedure do_kontraktow;
+call do_kontraktow();
+select * from kontrakty
+DELIMITER;
