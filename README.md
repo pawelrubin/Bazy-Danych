@@ -6,3 +6,6 @@ https://cs.pwr.edu.pl/syga/courses/db/Lab1.pdf
 https://cs.pwr.edu.pl/syga/courses/db/Lab2.pdf
 ### Lista 3 🚧
 https://cs.pwr.edu.pl/syga/courses/db/Lab3.pdf
+### Lista 4 - Projekt 🚧
+https://cs.pwr.edu.pl/syga/courses/db/Lab4.pdf
+
