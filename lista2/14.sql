@@ -4,4 +4,3 @@ CREATE VIEW aktor_agent_konktrakt AS (
     JOIN kontrakty k ON aktorzy.id_aktora = k.aktor
     JOIN agenci a ON k.agent = a.licencja
 );
-

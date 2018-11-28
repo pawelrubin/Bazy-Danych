@@ -20,5 +20,3 @@ CREATE TABLE Kontrakty (
   CHECK (DATEDIFF(poczatek, koniec) >= 1),
   CHECK (gaza >= 0)
 );
-ALTER TABLE Kontrakty auto_increment=1;
-drop table Kontrakty

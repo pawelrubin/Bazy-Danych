@@ -50,8 +50,3 @@ CREATE PROCEDURE do_kontraktow ()
       ITERATE label;
     END LOOP;
   END//
-delete from kontrakty;
-drop procedure do_kontraktow;
-call do_kontraktow();
-select * from kontrakty
-DELIMITER;
