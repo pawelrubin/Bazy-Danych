@@ -166,7 +166,7 @@ CREATE PROCEDURE reprodukcja(IN ile INT)
               'Michał', 'Cezary', 'Kierowca', 'Andrzej', 'Zygmunt');
       SET new_nazwisko = ELT(FLOOR(1 + RAND() * 13), 'Sztorm', 'Gadżet', 'Torpeda', 'Kierownik', 'Zwyczajny', 'Spider Man', 'Peja', 'Jobs',
               'Archanioł', 'Pazura', 'Tira', 'Baltazar', 'Dzwon');
-      SET new_data_urodzenia = CURDATE() - INTERVAL FLOOR(16 + RAND() * 52) YEAR - INTERVAL FLOOR(RAND() * 365) DAY;
+      SET new_data_urodzenia = CURDATE() - INTERVAL FLOOR(17 + RAND() * 52) YEAR - INTERVAL FLOOR(RAND() * 365) DAY;
       SET new_wzrost = FLOOR(140 + RAND() * 80);
       SET new_waga = FLOOR(40 + RAND() * 100);
       SET new_rozmiar_buta = FLOOR(36 + RAND() * 10);
@@ -236,7 +236,7 @@ CREATE PROCEDURE reprodukcja(IN ile INT)
 DELIMITER ;
 
 DELIMITER //
-CREATE PROCEDURE zatrudnianie(IN ile INT, IN zawod VARCHAR(50), IN pensja_min FLOAT, IN pensja_maks FLOAT)
+CREATE PROCEDURE zatrudnianie(IN ile INT, IN zawod VARCHAR(50), IN pensja_min FLOAT, IN pensja_maks FLOAT, IN wiek_maks INT)
   BEGIN
     DECLARE pensja FLOAT;
     DECLARE i INT DEFAULT 0;
@@ -244,17 +244,26 @@ CREATE PROCEDURE zatrudnianie(IN ile INT, IN zawod VARCHAR(50), IN pensja_min FL
       SET pensja = FLOOR(
         pensja_min + RAND() * (pensja_maks - pensja_min)
       );
+
+      DROP TEMPORARY TABLE IF EXISTS prac;
+      CREATE TEMPORARY TABLE prac SELECT PESEL FROM Pracownicy;
+
       INSERT INTO Pracownicy(PESEL, zawod, pensja)
       VALUES (
-        (SELECT PESEL FROM Ludzie WHERE YEAR(data_urodzenia - curdate()) > 18 LIMIT i,1),
+        (SELECT PESEL FROM Ludzie WHERE ((YEAR(CURDATE()) - YEAR(data_urodzenia)) BETWEEN 18 AND wiek_maks) AND
+          Ludzie.PESEL NOT IN (SELECT * FROM prac) LIMIT i,1),
         zawod,
         pensja
       );
+
       SET i = i + 1;
     END WHILE;
   END//
 DELIMITER ;
 
 CALL reprodukcja(200);
-
-
+CALL zatrudnianie(50, 'aktor', 4000, 20000, 9999);
+CALL zatrudnianie(33, 'agent', 5000, 10000, 9999);
+CALL zatrudnianie(13, 'informatyk', 7000, 20999, 9999);
+CALL zatrudnianie(2, 'reporter', 2500, 4500, 9999);
+CALL zatrudnianie(77, 'sprzedawca', 1800, 3000, 65);
