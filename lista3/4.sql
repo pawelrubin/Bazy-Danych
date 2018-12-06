@@ -30,12 +30,35 @@ DELIMITER //
 CREATE TRIGGER ludzie_insert_trigger BEFORE INSERT ON Ludzie
   FOR EACH ROW
   BEGIN
-    IF (SUBSTRING(NEW.PESEL, 1, 2) <> SUBSTRING(YEAR(NEW.data_urodzenia), 3, 2)) THEN
+    DECLARE rok YEAR;
+    SET rok = YEAR(NEW.data_urodzenia);
+
+    IF (SUBSTRING(NEW.PESEL, 1, 2) <> SUBSTRING(rok, 3, 2)) THEN
       SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'PESEL nie zgadza sie z data urodzenia - blad w roku urodzenia.';
     END IF;
-    IF (SUBSTRING(NEW.PESEL, 3, 2) <> MONTH(NEW.data_urodzenia)) THEN
-      SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'PESEL nie zgadza sie z data urodzenia - blad w miesiacu urodzenia.';
+
+    IF rok BETWEEN 1900 AND 1999 THEN
+      IF (SUBSTRING(NEW.PESEL, 3, 2) <> MONTH(NEW.data_urodzenia)) THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'PESEL nie zgadza sie z data urodzenia - blad w miesiacu urodzenia.';
+      END IF;
+    ELSEIF rok BETWEEN 1800 AND 1899 THEN
+      IF CAST(SUBSTRING(NEW.PESEL, 3, 2) AS UNSIGNED ) - 80 <> MONTH(NEW.data_urodzenia) THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'PESEL nie zgadza sie z data urodzenia - blad w miesiacu urodzenia.';
+      END IF;
+    ELSEIF rok BETWEEN 2000 AND 2099 THEN
+      IF CAST(SUBSTRING(NEW.PESEL, 3, 2) AS UNSIGNED ) - 20 <> MONTH(NEW.data_urodzenia) THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'PESEL nie zgadza sie z data urodzenia - blad w miesiacu urodzenia.';
+      END IF;
+    ELSEIF rok BETWEEN 2100 AND 2199 THEN
+      IF CAST(SUBSTRING(NEW.PESEL, 3, 2) AS UNSIGNED ) - 40 <> MONTH(NEW.data_urodzenia) THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'PESEL nie zgadza sie z data urodzenia - blad w miesiacu urodzenia.';
+      END IF;
+    ELSEIF rok BETWEEN 2200 AND 2299 THEN
+      IF CAST(SUBSTRING(NEW.PESEL, 3, 2) AS UNSIGNED ) - 60 <> MONTH(NEW.data_urodzenia) THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'PESEL nie zgadza sie z data urodzenia - blad w miesiacu urodzenia.';
+      END IF;
     END IF;
+
     IF (SUBSTRING(NEW.PESEL, 5, 2) <> DAYOFMONTH(NEW.data_urodzenia)) THEN
       SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'PESEL nie zgadza sie z data urodzenia - blad w dniu urodzenia.';
     END IF;
@@ -128,7 +151,12 @@ CREATE PROCEDURE reprodukcja(IN ile INT)
     DECLARE new_rozmiar_buta INT(11);
     DECLARE new_ulubiony_kolor VARCHAR(10);
     DECLARE new_PESEL CHAR(11);
+    DECLARE temp_rok YEAR;
+    DECLARE PESEL_rok CHAR(2);
     DECLARE PESEL_data CHAR(6);
+    DECLARE temp_miesiac CHAR(2);
+    DECLARE PESEL_miesiac CHAR(2);
+    DECLARE PESEL_dzien CHAR(2);
     DECLARE PESEL_seria CHAR(4);
     DECLARE PESEL_suma CHAR(1);
 
@@ -138,21 +166,53 @@ CREATE PROCEDURE reprodukcja(IN ile INT)
               'Michał', 'Cezary', 'Kierowca', 'Andrzej', 'Zygmunt');
       SET new_nazwisko = ELT(FLOOR(1 + RAND() * 13), 'Sztorm', 'Gadżet', 'Torpeda', 'Kierownik', 'Zwyczajny', 'Spider Man', 'Peja', 'Jobs',
               'Archanioł', 'Pazura', 'Tira', 'Baltazar', 'Dzwon');
-      SET new_data_urodzenia = CURDATE() - INTERVAL FLOOR(18 + RAND() * 52) YEAR - INTERVAL FLOOR(RAND() * 365) DAY;
+      SET new_data_urodzenia = CURDATE() - INTERVAL FLOOR(16 + RAND() * 52) YEAR - INTERVAL FLOOR(RAND() * 365) DAY;
       SET new_wzrost = FLOOR(140 + RAND() * 80);
       SET new_waga = FLOOR(40 + RAND() * 100);
       SET new_rozmiar_buta = FLOOR(36 + RAND() * 10);
       SET new_ulubiony_kolor = ELT(FLOOR(1 + RAND() * 5), 'czarny', 'czerwony', 'zielony', 'niebieski','biały');
+
+      SET temp_rok = YEAR(new_data_urodzenia);
+      SET PESEL_rok = SUBSTRING(new_data_urodzenia, 3, 2);
+      SET temp_miesiac = SUBSTRING(new_data_urodzenia, 6, 2);
+
+      IF temp_rok BETWEEN 1900 AND 1999 THEN
+        SET PESEL_miesiac = temp_miesiac;
+      ELSEIF temp_rok BETWEEN 1800 AND 1899 THEN
+        SET PESEL_miesiac = CAST(
+          (CAST(temp_miesiac AS UNSIGNED) + 80)
+          AS CHAR(2));
+      ELSEIF temp_rok BETWEEN 2000 AND 2099 THEN
+        SET PESEL_miesiac = CAST(
+          (CAST(temp_miesiac AS UNSIGNED) + 20)
+          AS CHAR(2));
+      ELSEIF temp_rok BETWEEN 2100 AND 2199 THEN
+        SET PESEL_miesiac = CAST(
+          (CAST(temp_miesiac AS UNSIGNED) + 40)
+          AS CHAR(2));
+      ELSEIF temp_rok BETWEEN 2200 AND 2299 THEN
+        SET PESEL_miesiac = CAST(
+          (CAST(temp_miesiac AS UNSIGNED) + 60)
+          AS CHAR(2));
+      ELSE
+        SET PESEL_miesiac = '13';
+      END IF;
+
+      SET PESEL_dzien = SUBSTRING(new_data_urodzenia, 9, 2);
+
       SET PESEL_data = CONCAT(
-        SUBSTRING(new_data_urodzenia, 3, 2),
-        SUBSTRING(new_data_urodzenia, 6, 2),
-        SUBSTRING(new_data_urodzenia, 9, 2));
+        PESEL_rok,
+        PESEL_miesiac,
+        PESEL_dzien
+      );
+
       SET PESEL_seria = CONCAT(
           FLOOR(RAND() * 10),
           FLOOR(RAND() * 10),
           FLOOR(RAND() * 10),
           FLOOR(RAND() * 10)
         );
+
       SET PESEL_suma = CAST(MOD(
         9*CAST(SUBSTRING(PESEL_data, 1, 1) AS UNSIGNED) +
         7*CAST(SUBSTRING(PESEL_data, 2, 1) AS UNSIGNED) +
@@ -165,6 +225,7 @@ CREATE PROCEDURE reprodukcja(IN ile INT)
         9*CAST(SUBSTRING(PESEL_seria, 3, 1) AS UNSIGNED) +
         7*CAST(SUBSTRING(PESEL_seria, 4, 1) AS UNSIGNED),
         10) AS CHAR);
+
       SET new_PESEL = CONCAT(PESEL_data, PESEL_seria, PESEL_suma);
 
       INSERT INTO Ludzie(PESEL, imie, nazwisko, data_urodzenia, wzrost, waga, rozmiar_buta, ulubiony_kolor)
@@ -172,6 +233,28 @@ CREATE PROCEDURE reprodukcja(IN ile INT)
       SET i = i + 1;
     END WHILE;
   END //
+DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE zatrudnianie(IN ile INT, IN zawod VARCHAR(50), IN pensja_min FLOAT, IN pensja_maks FLOAT)
+  BEGIN
+    DECLARE pensja FLOAT;
+    DECLARE i INT DEFAULT 0;
+    WHILE i < ile DO
+      SET pensja = FLOOR(
+        pensja_min + RAND() * (pensja_maks - pensja_min)
+      );
+      INSERT INTO Pracownicy(PESEL, zawod, pensja)
+      VALUES (
+        (SELECT PESEL FROM Ludzie WHERE YEAR(data_urodzenia - curdate()) > 18 LIMIT i,1),
+        zawod,
+        pensja
+      );
+      SET i = i + 1;
+    END WHILE;
+  END//
+DELIMITER ;
 
 CALL reprodukcja(200);
+
 
