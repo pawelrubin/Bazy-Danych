@@ -7,7 +7,7 @@ SELECT nazwisko FROM aktorzy WHERE liczba_filmow > 12;
 # Wykorzystywany jest indeks idx_filmy_tutyl
 SELECT DISTINCT tytul FROM filmy JOIN zagrali ON filmy.id_filmu = zagrali.id_filmu
 WHERE id_aktora IN (
-    SELECT id_aktora FROM zagrali z
+    SELECT DISTINCT id_aktora FROM zagrali z
     WHERE z.id_filmu IN (
         SELECT z.id_filmu FROM zagrali z JOIN aktorzy a ON z.id_aktora = a.id_aktora
         WHERE imie LIKE 'Zero' AND nazwisko LIKE 'Cage'
