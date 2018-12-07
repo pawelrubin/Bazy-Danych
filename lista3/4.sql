@@ -137,9 +137,6 @@ VALUES ('99100101234', 'Pawlo', 'Escobar', '1999-10-01', 197, 120, 45, 'czarny')
 INSERT INTO Ludzie(PESEL, imie, nazwisko, data_urodzenia, wzrost, waga, rozmiar_buta, ulubiony_kolor)
 VALUES ('7813101234', 'Jan', 'Tacior', '1876-10-01', -7, 0, 45, 'czarny');
 
-SELECT * FROM Ludzie;
-DELETE FROM Ludzie;
-
 DELIMITER //
 CREATE PROCEDURE reprodukcja(IN ile INT)
   BEGIN
