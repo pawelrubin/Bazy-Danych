@@ -33,3 +33,4 @@ CREATE PROCEDURE wyplata(IN budzet FLOAT, IN in_zawod VARCHAR(30))
 
     DROP TEMPORARY TABLE wynik;
   END //
+DELIMITER ;
