@@ -12,3 +12,4 @@ CREATE PROCEDURE agreguj_kolumne(IN agg VARCHAR(15), IN kol VARCHAR(50))
       SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'O ty gagatku.';
     END IF;
   END //
+DELIMITER ;
