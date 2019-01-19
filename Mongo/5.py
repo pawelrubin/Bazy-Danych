@@ -1,5 +1,8 @@
 import pymongo
 import random
+from tools import randelem
+from tools import randYear
+from pprint import pprint
 
 myclient = pymongo.MongoClient("mongodb://localhost:27017/")
 
@@ -23,30 +26,21 @@ def generate_characters():
   result = []
   for i in range(0, random.randint(2, len(characters)-1)):
     if (random.randint(0,1)):
-      result.append(characters[random.randint(0, len(characters)-1)])
+      result.append(randelem(characters))
+      
   return result
 
 books.delete_many({})
+
 for i in range(0, 20):
   main_characters = generate_characters()
   record = {
-    "title": 
-      title1[random.randint(0, len(title1)-1)] + " " +
-      title2[random.randint(0, len(title2)-1)]
-    ,
-    "author": 
-      names[random.randint(0, len(names)-1)] + " " +
-      surnames[random.randint(0, len(surnames)-1)]
-    ,
-    "publish_year": 
-      random.randint(1900, 2018)
-    ,
+    "title": randelem(title1) + " " + randelem(title2),
+    "author": randelem(names) + " " + randelem(surnames),
+    "publish_year": randYear(),
     "main_characters": main_characters
   }
   books.insert_one(record)
 
 for i in books.find({}, {"_id": 0}):
-  print(i)
-
-
-
+  pprint(i)

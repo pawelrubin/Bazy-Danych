@@ -1,5 +1,6 @@
 import pymongo
 import random
+from tools import randelem
 
 myclient = pymongo.MongoClient("mongodb://localhost:27017/")
 MFilmoteka = myclient["MFilmoteka"]
@@ -8,26 +9,25 @@ aktorzy.delete_many({})
 names = ["Hugh", "Al", "Jan", "Paweł", "Szymon", "Karol", "Michał", "Łukasz",
   "Dawid", "Mateusz"]
 surnames = ["Wojtyła", "Rubin", "Głąb", "Kobiałka", "Podgórny", "Bratos",
-  "Dworzański", "Iwańczak"]
+  "Dworzański", "Iwańczak", "Harris"]
 genres = ["komedia", "fantasy", "kryminał"]
-countries = ["Polska", "Niemcy", "Australia"]
+countries = ["Polska", { "country": "Niemcy", "state": "Bawaria"}, "Australia", { "country": "USA", "state": "Kalifornia" }, 
+  { "country": "Rosja", "state": "Moskwa" }]
 
 for i in range(0, 200):
 
   genres_record = []
   for i in range(0, len(genres)):
-    if (random.randint(0, 1)):
+    if ( random.randint(0, 1)):
       genres_record.append(genres[i])
 
   record = {
-    "Name": names[random.randint(0, len(names)-1)],
-    "Surname": surnames[random.randint(0, len(surnames)-1)],
-    "Age": random.randint(18, 65),
-    "Height": random.randint(160, 210),
-    "Genres": genres_record,
-    "Country": countries[random.randint(0, len(countries)-1)]
+    "name": randelem(names),
+    "surname": randelem(surnames),
+    "age": random.randint(18, 65),
+    "height": random.randint(160, 210),
+    "genres": genres_record,
+    "country": randelem(countries)
   }
-  aktorzy.insert_one(record)
 
-for i in aktorzy.find( {"Name": "Karol"} ):
-  print(i)
+  aktorzy.insert_one(record)
