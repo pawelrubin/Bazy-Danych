@@ -1,0 +1,2 @@
+use MFilmoteka
+db.getSiblingDB("MBookStore").books.find({}, {'_id': 0, 'title': 1})

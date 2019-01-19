@@ -17,8 +17,8 @@ CREATE PROCEDURE suma_kolumny_dla_zawodu(IN kol VARCHAR(6), IN in_zawod VARCHAR(
 
     SET @maks = CONCAT('(SELECT MAX(', kol, ') FROM pracownicy JOIN ludzie l ON pracownicy.PESEL = l.PESEL WHERE zawod = \'', in_zawod, '\')');
     SET @minn = CONCAT('(SELECT MIN(', kol, ') FROM pracownicy JOIN ludzie l ON pracownicy.PESEL = l.PESEL WHERE zawod = \'', in_zawod, '\')');
-    SET @x = (SELECT SUM(kol) FROM ludzie);
-    SET @szum = (SELECT rand_laplace(0, @x, @b));
+#     SET @x = (SELECT SUM(kol) FROM ludzie);
+#     SET @szum = (SELECT rand_laplace(0, @x, @b));
 
     SET @str = CONCAT('SELECT rand_laplace(0, (SELECT SUM(',kol,') FROM ludzie), (', @maks, '- ', @minn,')/', epsilon,')',
                       ' + SUM(', kol, ') FROM pracownicy JOIN ludzie l ON pracownicy.PESEL = l.PESEL WHERE zawod = \'', in_zawod, '\';');
@@ -26,4 +26,6 @@ CREATE PROCEDURE suma_kolumny_dla_zawodu(IN kol VARCHAR(6), IN in_zawod VARCHAR(
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
   END//
-DELIMITER ;\
+DELIMITER ;
+
+CALL suma_kolumny_dla_zawodu('wzrost', 'informatyk', 0.05);
