@@ -1,25 +1,23 @@
 import pymongo
+import datetime
 from pprint import pprint
 
 myclient = pymongo.MongoClient("mongodb://localhost:27017/")
-MFilmoteka = myclient["MFilmoteka"]
 MBookStore = myclient["MBookStore"]
-filmy = MFilmoteka["filmy"]
+MFilmoteka = myclient["MFilmoteka"]
 books = MBookStore["books"]
+filmy = MFilmoteka["filmy"]
 
-films_titles = filmy.find({}, {'_id': 0, 'title': 1})
+for book in books.find():
+  for film in filmy.aggregate([
+      { '$match': {
+        'title': book['title']
+      }}
+    ]):
 
-query = books.find(
-  {
-    'title': {
-      '$in': filmy.find({}, {'_id': 0, 'title': 1})
-    }
-  },
-  {
-    '_id': 0,
-    'title': 1
-  }
-)
-
-for i in query:
-  pprint(i)
+    pprint({
+      "book title": book['title'],
+      "book author": book['author'],
+      "film director": film['director'],
+      "film title": film['title']
+    })

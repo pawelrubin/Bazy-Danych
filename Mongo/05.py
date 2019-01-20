@@ -42,5 +42,5 @@ for i in range(0, 20):
   }
   books.insert_one(record)
 
-for i in books.find({}, {"_id": 0}):
+for i in books.find({}, {"_id": 0, 'title': 1}):
   pprint(i)

@@ -11,7 +11,11 @@ filmy = MFilmoteka["filmy"]
 aktorzy = MFilmoteka["aktorzy"]
 filmy.delete_many({})
 tytuly1 = ["Kapitan", "Władca", "Turysta", "Kapłan", "Andrzej",
-  "Mordziu", "Książe", "Mistrz"]
+  "Mordziu", "Książe", "Mistrz", "Miś", "Frodo", "John Wick", "Prezydent", "Glass",
+  "Jacek", "John", "Gandalf", "Ariadna", "Eames", "Cobb",
+  "Robert Fischer", "Saito", "Yusuf", "Profesor", "Arthur",
+  "Andrew", "Fletcher", "Nicole", "Carl", "Jim", "Shrek", "Gandalf", "Buka", "Filifionka",
+  "Mamusia Muminka", "Migotka", "Muminek", "Włóczykij"]
 tytuly2 = ["Sztorm", "Pierścieni", "Nocy", "Bezimienny",
   "2000", "Wenecji", "Kutarate"]
 directors = ["Quentin Tarantino", "Roman Polański", "Wojciech Macyna"]
@@ -51,5 +55,5 @@ for i in range(0, 200):
   }
   filmy.insert_one(record)
 
-for i in filmy.find({}, { "_id": 0, "publish_date": 1 }):
+for i in filmy.find({}, { "_id": 0, "title": 1 }):
   pprint(i)
