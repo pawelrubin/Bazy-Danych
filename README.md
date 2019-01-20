@@ -8,4 +8,6 @@ https://cs.pwr.edu.pl/syga/courses/db/Lab2.pdf
 https://cs.pwr.edu.pl/syga/courses/db/Lab3.pdf
 ### Lista 4 [tutaj](https://github.com/luk9400/AlkoHurt)
 https://cs.pwr.edu.pl/syga/courses/db/Lab4.pdf
+### Lista dodatkowa ✔
+https://cs.pwr.edu.pl/syga/courses/db/LabD.pdf
 
