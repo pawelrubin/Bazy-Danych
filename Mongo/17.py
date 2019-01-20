@@ -1,28 +1,24 @@
 import pymongo
-from bson.json_util import dumps 
+import datetime
+from pprint import pprint
 
 myclient = pymongo.MongoClient("mongodb://localhost:27017/")
-MFilmoteka = myclient["MFilmoteka"]
 MBookStore = myclient["MBookStore"]
-
-filmy = MFilmoteka["filmy"]
+MFilmoteka = myclient["MFilmoteka"]
 books = MBookStore["books"]
+filmy = MFilmoteka["filmy"]
 
-qeury = filmy.find({
-  "Tytuł": {
-    "$in": {
-      books.find({}, {
-        '_id': 0,
-        'title': 1
-      })
-    }
-  }}, {
-    '_id': 0,
-    'Tytuł': 1
-  })
+for film in filmy.find():
+  for book in books.aggregate([
+      { '$match': {
+        'title': film['title'],
+        # 'main_characters': {
+        #   '$in': film['cast']
+        # }
+      }}
+    ]):
 
-# parsed = json.loads(filmy.find_one({}, {'_id': 0, }).toStr())
-query = filmy.find_one({}, {'_id': 0, })
-# printdumps( filmy.find_one({}, {'_id': 0, }))
-# for i in qeury:
-#   print(i)
+    pprint({
+      "film director": film['director'],
+      "film characters from book": book['main_characters']
+    })
