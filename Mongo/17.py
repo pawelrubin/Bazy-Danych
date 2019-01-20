@@ -9,16 +9,19 @@ books = MBookStore["books"]
 filmy = MFilmoteka["filmy"]
 
 for film in filmy.find():
-  for book in books.aggregate([
-      { '$match': {
-        'title': film['title'],
-        # 'main_characters': {
-        #   '$in': film['cast']
-        # }
-      }}
-    ]):
+    if isinstance(film['publish_date'], str):
+        film['publish_date'] = datetime.datetime.strptime(film['publish_date'], '%Y-%m-%d').year
 
-    pprint({
-      "film director": film['director'],
-      "film characters from book": book['main_characters']
-    })
+    for book in books.find({
+        'title': film['title'],
+        'publish_year': { '$lt': film['publish_date'] },
+        'main_characters': {
+            '$in': [cast['role'] for cast in film['cast']]
+        }
+    }):
+        print({
+        "film title": film['title'],
+        "from book": book['title'],
+        "film date": film['publish_date'],
+        "book date": book['publish_year']
+        })
