@@ -14,7 +14,7 @@ aktorzy = MFilmoteka["aktorzy"]
 agenci.delete_many({})
 
 names = ["Hugh", "Al", "Jan", "Paweł", "Szymon", "Karol", "Michał", "Łukasz",
-  "Dawid", "Mateusz", "Kevin", "Xawery", "Qurczak", "Vampir"]
+  "Dawid", "Mateusz", "Kevin", "Xawery", "Qurczak", "Vampir", "Ovbcq", "ER3vqxX"]
 
 surnames = ["Tarantino", "Bratos", "Cichoń", "Krupski", "Zawada", "Syga", "Żeberski",
   "Sulkowski", "Macyna", "Kapelko", "Xanax", "Vąż", "Qrde"]

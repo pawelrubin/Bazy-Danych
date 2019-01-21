@@ -4,6 +4,15 @@ from pprint import pprint
 myclient = pymongo.MongoClient("mongodb://localhost:27017/")
 MFilmoteka = myclient["MFilmoteka"]
 agenci = MFilmoteka["agenci"]
+normalnie = agenci.find(
+  {},
+  {
+    '_id': 0,
+    'name': 1,
+    'surname': 1,
+    'corpo': 1
+  }
+)
 
 bez_liter = agenci.find(
   {
@@ -27,7 +36,7 @@ bez_liter = agenci.find(
 bez_liter_korpo = agenci.find(
   {
     'name': {
-      '$regex': '^[^vxq].*|Kevin',
+      '$regex': '^[^vxq]+|Kevin',
       '$options': 'i'
     },
     'surname': {
@@ -45,6 +54,12 @@ bez_liter_korpo = agenci.find(
     'corpo': 1
   }
 )
+
+for i in normalnie:
+  pprint(i)
+
+print("")
+
 for i in bez_liter:
   pprint(i)
 
