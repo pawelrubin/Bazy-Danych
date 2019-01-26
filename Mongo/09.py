@@ -15,10 +15,3 @@ query = filmy.aggregate([
 ])
 for i in query:
   print(i)
-
-# to tez zadziala
-# query1 = filmy.find({'Obsada.7': {'$exists': True}}, {"_id": 0, "Tytuł": 1})
-# query1_1 = iter(query1)
-# next(query1_1)
-# for i in query1_1:
-#   print(i)

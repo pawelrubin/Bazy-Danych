@@ -17,11 +17,11 @@ normalnie = agenci.find(
 bez_liter = agenci.find(
   {
     'name': {
-      '$regex': '^[^vxq].*|Kevin',
+      '$regex': '^[^vxq]+|(Kevin)',
       '$options': 'i'
     },
     'surname': {
-      '$regex': '^[^vxq].*',
+      '$regex': '^[^vxq]+',
       '$options': 'i'
     }
   },
@@ -40,7 +40,7 @@ bez_liter_korpo = agenci.find(
       '$options': 'i'
     },
     'surname': {
-      '$regex': '^[^vxq].*',
+      '$regex': '^[^vxq]+',
       '$options': 'i'
     },
     'corpo': {

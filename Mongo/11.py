@@ -16,3 +16,4 @@ print(aktorzy.count_documents({}))
 
 for i in aktorzy.find({"Genres": {'$all': ["komedia", "kryminał"]}}):
   print(i)
+  
